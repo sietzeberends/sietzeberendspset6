@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "258494171489",
+    "firebase_url": "https://sietzeberendspset6.firebaseio.com",
+    "project_id": "sietzeberendspset6",
+    "storage_bucket": "sietzeberendspset6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258494171489:android:90ece9a875a23968",
+        "android_client_info": {
+          "package_name": "com.example.user4.sietzeberendspset6"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258494171489-3jl05igjj3nff69iul5ttrniqhs67809.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.user4.sietzeberendspset6",
+            "certificate_hash": "fffd494039fc74ee5fb51067289d013be24ba160"
+          }
+        },
+        {
+          "client_id": "258494171489-m2tcsko1n44vm1kkcrpvdniha6cv0ev9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkS6Q9OArbxucIUkP5BmGrBNyIiLrnTS0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258494171489-m2tcsko1n44vm1kkcrpvdniha6cv0ev9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

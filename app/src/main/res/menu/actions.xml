@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Highscores"
+        android:id="@+id/highscores"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="New game"
+        android:id="@+id/newGame"
+        app:showAsAction="always"/>
+    <item
+        android:title="Logout"
+        android:id="@+id/logout"
+        app:showAsAction="always"/>
+</menu>

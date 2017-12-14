@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.user4.sietzeberendspset6.LoginRegister"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quizmaster 3000"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="12pt" />
+
+    <EditText
+        android:id="@+id/getEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="75dp"
+        android:layout_centerHorizontal="true"
+        android:hint="E-mail"
+        android:textAlignment="center"
+        android:inputType="textEmailAddress"
+        android:imeOptions="flagNoExtractUi"
+        />
+
+    <EditText
+        android:id="@+id/getPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/getEmail"
+        android:layout_centerHorizontal="true"
+        android:hint="Password"
+        android:textAlignment="center"
+        android:inputType="textPassword"
+        android:imeOptions="flagNoExtractUi"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_below="@+id/getPassword"
+        android:paddingTop="25dp">
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:onClick="login"/>
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:onClick="register"/>
+    </LinearLayout>
+
+</RelativeLayout>

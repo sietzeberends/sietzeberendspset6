@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.user4.sietzeberendspset6.ConfigureQuiz"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/todo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:textAlignment="center"
+        android:text=""
+        android:textSize="14pt"
+        android:textStyle="bold|italic"
+        android:maxLines="1"/>
+
+    <Button
+        android:id="@+id/choice_up"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15"
+        android:onClick="changeChoice"
+        android:text="@string/upside_down_v"
+        android:textSize="20pt"
+        android:textStyle="bold"
+        android:textColor="#808080"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:id="@+id/choice"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:textAlignment="center"
+        android:textSize="13pt"/>
+
+    <Button
+        android:id="@+id/choice_down"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.45"
+        android:onClick="changeChoice"
+        android:text="v"
+        android:textSize="20pt"
+        android:textStyle="bold"
+        android:textColor="#808080"
+        android:background="@android:color/transparent"/>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:onClick="confirmChoice"
+        android:textSize="13pt"
+        android:text="Next"
+        />
+
+</LinearLayout>

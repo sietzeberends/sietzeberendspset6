@@ -1,5 +1,7 @@
 exclude:
-- /app/build/generated/source/r/debug/android/arch/lifecycle/R.java
+- /app/build/generated/source/r/
+- /app/src/androidTest/
+- /app/src/test/
 component_depth: 1
 languages:
 - java

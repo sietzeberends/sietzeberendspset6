@@ -137,30 +137,37 @@ public class LoginRegister extends AppCompatActivity {
     public void register(View view) {
         email = getEmail.getText().toString();
         password = getEmail.getText().toString();
+        if((email.isEmpty() || email == null) || (password.isEmpty() || password == null)) {
+            String message = "Email or password missing, please enter both.";
+            Toast.makeText(LoginRegister.this, message, Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                       Log.w("create user", "createUserWithEmail:success");
+        else{
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.w("create user", "createUserWithEmail:success");
 
-                       // Register account failure, give error message to user
-                       if(!task.isSuccessful()) {
-                           String message = "Email or password already exists or are invalid. ";
-                           message += " Please enter a valid email-address and make sure that ";
-                           message += "your password is at least 6 characters";
-                           Toast.makeText(LoginRegister.this, message, Toast.LENGTH_LONG).show();
-                           updateUI(null);
-                       }
+                            // Register account failure, give error message to user
+                            if(!task.isSuccessful()) {
+                                String message = "Email or password already exists or are invalid. ";
+                                message += " Please enter a valid email-address and make sure that ";
+                                message += "your password is at least 6 characters";
+                                Toast.makeText(LoginRegister.this, message, Toast.LENGTH_LONG).show();
+                                updateUI(null);
+                            }
 
-                       // Register account succes, give message to user
-                       else {
-                           String message = "Account created succesfully, please login.";
-                           updateUI(null);
-                           Toast.makeText(LoginRegister.this, message, Toast.LENGTH_SHORT).show();
-                       }
-                    }
-                });
+                            // Register account succes, give message to user
+                            else {
+                                String message = "Account created succesfully, please login.";
+                                updateUI(null);
+                                Toast.makeText(LoginRegister.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 
     /**
@@ -172,23 +179,29 @@ public class LoginRegister extends AppCompatActivity {
         email = getEmail.getText().toString();
         password = getEmail.getText().toString();
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+        if((email.isEmpty() || email == null) || (password.isEmpty() || password == null)) {
+            String message = "Email or password missing, please enter both.";
+            Toast.makeText(LoginRegister.this, message, Toast.LENGTH_LONG).show();
+            return;
+        }
 
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            setStateListener();
-                        }
+        else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        else {
-                            String message = "Login failed, username or password incorrect";
-                            Toast.makeText(LoginRegister.this, message, Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                setStateListener();
+                            } else {
+                                String message = "Login failed, username or password incorrect";
+                                Toast.makeText(LoginRegister.this, message, Toast.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     /**

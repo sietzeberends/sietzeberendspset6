@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -137,31 +136,36 @@ public class Quiz extends AppCompatActivity {
     public void onBackPressed() {
     }
 
+    /**
+     * sets the AuthStateListener
+     */
     private void setListener() {
-        System.out.println("setlistener");
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    System.out.println("userfound, loaddata");
-                    Log.w("signed in", "onAuthStateChanged: signed_in:" + user.getUid());
                 }
 
                 else {
-                    Log.w("signed out", "onAuthStateChanged: signed_out");
                     logout();
                 }
             }
         };
     }
+
     public void logout() {
         mAuth.signOut();
         Intent intent = new Intent(this, LoginRegister.class);
         startActivity(intent);
     }
 
+    /**
+     * Loads the current question, category, difficulty, amount of questions, api url,
+     * score, highscore data from firebase if possible.
+     * Calls the next function (load questions from api, or show them if we have them already)
+     */
     private void loadData() {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -175,15 +179,20 @@ public class Quiz extends AppCompatActivity {
                 amount = Integer.parseInt(dataSnapshot.child(user.getUid()).child("amount").getValue(String.class));
                 questionsUrl = "https://opentdb.com/api.php?amount=" + amount + "&category=" + categoryId +
                         "&difficulty=" + difficulty + "&type=multiple";
-                System.out.println(questionsUrl);
                 questionObjects = (ArrayList<JSONObject>) dataSnapshot.child(user.getUid()).child("questionObjects").getValue();
                 if (questionObjects == null) {
                     questionObjects = new ArrayList<JSONObject>();
                     getFromApi(queue);
                 }
+                else {
+                    showData(questionObjects);
+                }
+
                 score = dataSnapshot.child(user.getUid()).child("score").getValue(Integer.class);
                 highscoreUser = dataSnapshot.child(user.getUid()).child("highscoreUser").getValue(Integer.class);
                 userScoreObject = (HashMap<String, Integer>) dataSnapshot.child("highscores").getValue();
+
+                // enables us to store and sort userid/score in firebase
                 if(userScoreObject == null) {
                     userScoreObject = new HashMap<String, Integer>();
                 }
@@ -191,11 +200,16 @@ public class Quiz extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
 
+    /**
+     * gets questions from a quiz api, also checks whether questions are available for a combination
+     * of category and difficulty
+     * Calls showData() when done
+     * @param queue, a Volley RequestQueue
+     */
     public void getFromApi(RequestQueue queue){
         StringRequest stringRequest = new StringRequest(Request.Method.GET, questionsUrl, new Response.Listener<String>() {
             @Override
@@ -207,7 +221,6 @@ public class Quiz extends AppCompatActivity {
                         JSONObject questionObject = jsonArray.getJSONObject(i);
                         questionObjects.add(questionObject);
                     }
-                    System.out.println("output size: " + questionObjects.size());
 
                     if(questionObjects.size() != 0) {
                         showData(questionObjects);
@@ -229,13 +242,17 @@ public class Quiz extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("errorlistener");
             }
         });
         queue.add(stringRequest);
     }
 
+    /**
+     * Shows the current question and the corresponding answers
+     * @param input
+     */
     public void showData(ArrayList<JSONObject> input) {
+        // show score when done
         if (currentQuestionNo == input.size()) {
             double percentage = ((double) score / (double)questionObjects.size() * 100);
             percentage = Math.round(percentage * 100.0) / 100.0;
@@ -244,12 +261,14 @@ public class Quiz extends AppCompatActivity {
                             "a new game or view the highscores.");
             gvAdapter.clear();
 
+            // save score in Firebase if it's a new highscore
             if (score > highscoreUser) {
                 highscoreUser = score;
                 userScoreObject.put(user.getUid(), highscoreUser);
                 mDatabase.child("highscores").setValue(userScoreObject);
             }
 
+            // get ready for a new game
             mDatabase.child(user.getUid()).child("state").setValue(0);
             mDatabase.child(user.getUid()).child("score").setValue(0);
             mDatabase.child(user.getUid()).child("currentQuestionNo").setValue(0);
@@ -259,11 +278,9 @@ public class Quiz extends AppCompatActivity {
         }
         else if (currentQuestionNo != 0){
             currentQuestionNo %= input.size();
-            Log.d("size", String.valueOf(input.size()));
-            Log.d("afterModulo", currentQuestionNo.toString());
         }
         try {
-            System.out.println("CQN: " + currentQuestionNo);
+            // show the right question and answers
             currentQuestion = input.get(currentQuestionNo);
             question.setText(Html.fromHtml(currentQuestion.getString("question"),Html.FROM_HTML_MODE_LEGACY));
             answers.add(Html.fromHtml(input.get(currentQuestionNo).getString("correct_answer"),Html.FROM_HTML_MODE_LEGACY).toString());
@@ -279,6 +296,10 @@ public class Quiz extends AppCompatActivity {
         }
     }
 
+    /**
+     * Check if an answer is correct and call showData to display the next question
+     * @param view
+     */
     public void answer(View view) {
         answerButton = view.findViewById(R.id.chosenAnswer);
         answer = answerButton.getText().toString();
@@ -305,6 +326,9 @@ public class Quiz extends AppCompatActivity {
         showData(questionObjects);
     }
 
+    /**
+     * Reset some parameters and start configuring a new quiz
+     */
     public void newGame() {
         mDatabase.child(user.getUid()).child("state").setValue(0);
         mDatabase.child(user.getUid()).child("score").setValue(0);
@@ -313,6 +337,9 @@ public class Quiz extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * show the highscores
+     */
     public void highscores() {
         mDatabase.child(user.getUid()).child("state").setValue(0);
         mDatabase.child(user.getUid()).child("score").setValue(0);

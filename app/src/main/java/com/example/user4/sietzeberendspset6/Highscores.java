@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,8 +53,10 @@ public class Highscores extends AppCompatActivity {
         setListener();
     }
 
+    /**
+     * sets the AuthStateListener and calls loadHighscores
+     */
     private void setListener() {
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -63,12 +64,10 @@ public class Highscores extends AppCompatActivity {
 
                 if (user != null) {
                     // User is signed in
-                    Log.w("signed in", "onAuthStateChanged: signed_in:" + user.getUid());
                     loadHighscores();
                 }
 
                 else {
-                    Log.w("signed out", "onAuthStateChanged: signed_out");
                 }
             }
         };
@@ -130,14 +129,16 @@ public class Highscores extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * We're already in the highscores activity
+     */
     public void highscores() {
-        mDatabase.child(user.getUid()).child("state").setValue(0);
-        mDatabase.child(user.getUid()).child("score").setValue(0);
-        mDatabase.child(user.getUid()).child("currentQuestionNo").setValue(0);
-        Intent intent = new Intent(this, Highscores.class);
-        startActivity(intent);
+        return;
     }
 
+    /**
+     * Resets some parameters and let's the user configure a new game
+     */
     public void newGame() {
         mDatabase.child(user.getUid()).child("state").setValue(0);
         mDatabase.child(user.getUid()).child("score").setValue(0);
@@ -146,6 +147,9 @@ public class Highscores extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Loads the highscores from firebase, sorts them descending and calls adaptScore
+     */
     public void loadHighscores() {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -156,9 +160,6 @@ public class Highscores extends AppCompatActivity {
                 Collections.sort(listscores, new Comparator<Map.Entry<String, Integer>>() {
                     @Override
                     public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                        System.out.println(o1.getClass());
-                        System.out.println(o1.getKey());
-                        System.out.println(o1.getValue());
                         int oo1 = Integer.parseInt(String.valueOf(o1.getValue()));
                         int oo2 = Integer.parseInt(String.valueOf(o2.getValue()));
                         return ((Integer) oo2).compareTo((Integer) oo1);
@@ -179,6 +180,9 @@ public class Highscores extends AppCompatActivity {
         });
     }
 
+    /**
+     * Adapts the score in a listview
+     */
     public void adaptScore() {
         hsAdapter = new ArrayAdapter<String>(this, R.layout.highscore_row, listScoresSorted);
         highscores.setAdapter(hsAdapter);

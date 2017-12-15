@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -109,15 +108,12 @@ public class ConfigureQuiz extends AppCompatActivity {
 
                 if (user != null) {
                     // User is signed in
-                    Log.w("signed in", "onAuthStateChanged: signed_in:" + user.getUid());
                 }
 
                 else {
-                    Log.w("signed out", "onAuthStateChanged: signed_out");
                 }
             }
         };
-
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -167,7 +163,6 @@ public class ConfigureQuiz extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        System.out.println("lalala");
     }
 
     @Override
@@ -204,7 +199,6 @@ public class ConfigureQuiz extends AppCompatActivity {
 
         if(user == null) {
             String message = "Log the user out";
-            Log.w("logout", message);
             Intent intent = new Intent(this, LoginRegister.class);
             startActivity(intent);
         }
@@ -213,8 +207,6 @@ public class ConfigureQuiz extends AppCompatActivity {
                 state = 0;
             }
             mDatabase.child(user.getUid()).child("email").setValue(user.getEmail());
-            System.out.println("state:");
-            System.out.println(state);
 
             switch(state) {
                 // choose category
@@ -265,7 +257,6 @@ public class ConfigureQuiz extends AppCompatActivity {
      */
     public void changeChoice(View view) {
         ArrayList<String> input = new ArrayList<String>();
-        System.out.println("choosing arraylist, state is" + state);
         switch (state) {
             case 0:
                 input = categories;
@@ -277,7 +268,10 @@ public class ConfigureQuiz extends AppCompatActivity {
                 input = numbers;
                 break;
         }
+
         switch (view.getId()) {
+
+            // go down
             case R.id.choice_down:
                 if (currentChoice == 0) {
                     currentChoice = input.size() - 1;
@@ -287,14 +281,13 @@ public class ConfigureQuiz extends AppCompatActivity {
                     currentChoice -= 1;
                     mDatabase.child(user.getUid()).child("currentChoice").setValue(currentChoice);
                 }
-                Log.d("choice", currentChoice.toString());
                 showData(input);
                 break;
 
+            // go up
             case R.id.choice_up:
                 currentChoice += 1;
                 mDatabase.child(user.getUid()).child("currentChoice").setValue(currentChoice);
-                Log.d("choice", currentChoice.toString());
                 showData(input);
                 break;
         }
@@ -307,6 +300,7 @@ public class ConfigureQuiz extends AppCompatActivity {
     public void confirmChoice(View view) {
         switch(state) {
 
+            // save category, go to difficulty
             case 0:
                 state += 1;
                 mDatabase.child(user.getUid()).child("state").setValue(state);
@@ -327,15 +321,15 @@ public class ConfigureQuiz extends AppCompatActivity {
                 updateUI(user);
                 break;
 
+            // save difficulty, go to amount of questions
             case 1:
                 state += 1;
                 mDatabase.child(user.getUid()).child("state").setValue(state);
-
                 mDatabase.child(user.getUid()).child("difficulty").setValue(choice.getText().toString().toLowerCase());
-
                 updateUI(user);
                 break;
 
+            // save amount of questions, go to the quiz
             case 2:
                 state += 1;
                 mDatabase.child(user.getUid()).child("state").setValue(state);
@@ -378,7 +372,6 @@ public class ConfigureQuiz extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("errorlistener");
             }
         });
         queue.add(stringRequest);
@@ -390,14 +383,10 @@ public class ConfigureQuiz extends AppCompatActivity {
      * @param input
      */
     public void showData(ArrayList<String> input) {
-        System.out.println("CC" + currentChoice);
         if (currentChoice != 0){
             currentChoice %= input.size();
             mDatabase.child(user.getUid()).child("currentChoice").setValue(currentChoice);
-            Log.d("size", String.valueOf(input.size()));
-            Log.d("afterModulo", currentChoice.toString());
         }
-        System.out.println(Html.fromHtml(input.get(currentChoice),Html.FROM_HTML_MODE_LEGACY));
         choice.setText(Html.fromHtml(input.get(currentChoice),Html.FROM_HTML_MODE_LEGACY));
         }
 

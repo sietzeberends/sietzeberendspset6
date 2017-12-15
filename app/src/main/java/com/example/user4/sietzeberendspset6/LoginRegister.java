@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,12 +75,10 @@ public class LoginRegister extends AppCompatActivity {
 
                 if (user != null) {
                     // User is signed in
-                    Log.w("signed in", "onAuthStateChanged: signed_in:" + user.getUid());
                     setStateListener();
                 }
 
                 else {
-                    Log.w("signed out", "onAuthStateChanged: signed_out");
                 }
             }
         };
@@ -148,7 +145,6 @@ public class LoginRegister extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.w("create user", "createUserWithEmail:success");
 
                             // Register account failure, give error message to user
                             if(!task.isSuccessful()) {
